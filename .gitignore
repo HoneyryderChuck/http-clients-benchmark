@@ -1,0 +1,6 @@
+/**/*.swp
+.bundle
+.config
+.ruby-version
+Gemfile.lock
+_yardoc
