@@ -11,6 +11,8 @@ end
 
 gem "pry", :require => false
 
+gem "gruff"
+
 # clients
 gem 'net-http-persistent'
 gem 'typhoeus'

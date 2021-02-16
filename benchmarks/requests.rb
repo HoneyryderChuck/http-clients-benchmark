@@ -43,6 +43,10 @@ OptionParser.new do |opts|
     options[:verbose] = v
   end
 
+  opts.on("-g", "--graph", "build graphs") do |g|
+    options[:graph] = g
+  end
+
   opts.on("-h", "--help", "print options") do
     puts opts
     exit
@@ -56,6 +60,23 @@ COLOR_CODES_MODE = {
 }
 
 require 'benchmark'
+
+
+def run_benchmark
+  GC.start
+  GC.disable
+
+  yield
+
+  GC.enable
+  GC.start
+end
+
+
+GRAPHS = $clients.map do |nm|
+  [nm, {}]
+end.to_h
+
 
 Benchmark.bm do |bm|
   bench_clients = $clients.each do |nm|
@@ -71,13 +92,42 @@ Benchmark.bm do |bm|
       next unless client.respond_to?(mode)
 
       tty_color = COLOR_CODES_MODE[mode]
-      bm.report("#{nm}\t\t\e[#{tty_color}m#{mode}\e[0m") do
-        statuses = client.__send__(mode, $url, $calls, options)
-        if options[:verbose]
-          pr = Array(statuses).tally.map { |st, ct| "#{st} (#{ct})" }.join(", ")
-          print("\t#{pr}\n")
+
+      begin
+        run_benchmark do
+          tb = bm.report("#{nm}\t\t\e[#{tty_color}m#{mode}\e[0m") do
+            statuses = client.__send__(mode, $url, $calls, options)
+            if options[:verbose]
+              pr = Array(statuses).tally.map { |st, ct| "#{st} (#{ct})" }.join(", ")
+              print("\t#{pr}\n")
+            end
+          end
+          GRAPHS[nm][mode] = tb
         end
+      rescue RuntimeError => e
+        $stderr.puts "error running benchmark."
+        $stderr.puts e.full_message
       end
     end
+  end
+end
+
+
+if options[:graph]
+  require "gruff"
+
+  $modes.each do |mode|
+    g = Gruff::Bar.new(800)
+    g.title = "HTTP Client Benchmarks - #{mode}"
+    g.group_spacing = 20
+    g.font = File.join(__dir__, "..", "fixtures", 'Roboto-Light.ttf')
+
+    GRAPHS.each do |nm, bench|
+      bm = bench[mode]
+      next unless bm
+      g.data(nm, [bm.real])
+    end
+
+    g.write("http-#{mode}-bench.png")
   end
 end
