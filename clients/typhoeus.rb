@@ -16,7 +16,6 @@ module Clients
 
     def persistent(url, calls, options)
       hydra = Typhoeus::Hydra.new(max_concurrency: 3)
-      Typhoeus::Config.memoize = true
       requests = calls.times.map do
         request = Typhoeus::Request.new(url, ssl_verifyhost: 0, ssl_verifypeer: false)
         hydra.queue(request)
@@ -25,8 +24,6 @@ module Clients
       hydra.run
 
       requests.map(&:response).map(&:code)
-    ensure
-      Typhoeus::Config.memoize = false
     end
 
     def concurrent(url, calls, options)

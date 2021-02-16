@@ -14,7 +14,9 @@ module Clients
     end
 
     def persistent(url, calls, options)
-      responses = HTTPX.get(*([url] * calls), max_concurrent_requests: 1)
+      # httpx tries to pipeline, so we have to limit it to 1 concurrent request on initialization.
+      # force usage of http/1.1, for apples-to-apples comparison.
+      responses = HTTPX.get(*([url] * calls), max_concurrent_requests: 1, ssl: { alpn_protocols: %w[http/1.1]})
       
       responses.map(&:status)
     end
