@@ -4,9 +4,6 @@ ruby RUBY_VERSION
 
 source "https://rubygems.org"
 
-gem "rake", "~> 12.3"
-
-
 platform :mri do
   gem "benchmark-ips", require: false
   gem "pry-byebug", require: false
