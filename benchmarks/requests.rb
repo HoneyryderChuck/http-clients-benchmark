@@ -5,10 +5,11 @@ require 'optparse'
 
 require_relative "../clients"
 
-$url = "https://nghttp2.org/httpbin/get"
+host = ENV.fetch("HTTPBIN_HOST", "nghttp2.org/httpbin")
+$url = "https://#{host}/get"
 $modes = %w[single persistent concurrent]
 $clients = Clients.all
-$calls = 10
+$calls = 50
 
 options = {}
 
@@ -114,7 +115,10 @@ end
 
 
 if options[:graph]
+  require "fileutils"
   require "gruff"
+
+  FileUtils.mkdir("snapshots")
 
   $modes.each do |mode|
     g = Gruff::Bar.new(800)
@@ -128,6 +132,6 @@ if options[:graph]
       g.data(nm, [bm.real])
     end
 
-    g.write("http-#{mode}-bench.png")
+    g.write("snapshots/http-#{mode}-bench.png")
   end
 end
