@@ -80,16 +80,16 @@ end.to_h
 
 
 Benchmark.bm do |bm|
-  bench_clients = $clients.each do |nm|
-    client = Clients.fetch(nm)
-    begin
-      client.boot
-    rescue LoadError
-      $stderr.puts "Could not load #{nm}, skipping benchmarks"
-      next
-    end
+  $modes.each do |mode|
+    $clients.each do |nm|
+      client = Clients.fetch(nm)
+      begin
+        client.boot
+      rescue LoadError
+        $stderr.puts "Could not load #{nm}, skipping benchmarks"
+        next
+      end
 
-    $modes.each do |mode|
       next unless client.respond_to?(mode)
 
       tty_color = COLOR_CODES_MODE[mode]
@@ -118,7 +118,7 @@ if options[:graph]
   require "fileutils"
   require "gruff"
 
-  FileUtils.mkdir("snapshots")
+  FileUtils.mkdir_p("snapshots")
 
   $modes.each do |mode|
     g = Gruff::Bar.new(800)
