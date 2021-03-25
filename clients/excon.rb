@@ -16,6 +16,9 @@ module Clients
       response.status
     end
 
+    # can't use the #requests feature from excon because if the servers
+    # does "Connection: close", excon still tries to write to the socket,
+    # and EPIPEs.
     def persistent(url, calls, options)
       client = Excon.new(url, persistent: true)
       calls.times.map {

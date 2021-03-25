@@ -26,13 +26,13 @@ module Clients
     def persistent(url, calls, options)
       http = Net::HTTP::Persistent.new
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      status = calls.times.map {
+      statuses = calls.times.map {
         uri = URI.parse(url)
         response = http.request(uri)
         response.code
       }
       http.shutdown
-      status
+      statuses
     end
   end
 
