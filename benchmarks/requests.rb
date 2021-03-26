@@ -2,7 +2,6 @@
 
 require 'optparse'
 
-
 require_relative "../clients"
 
 host = ENV.fetch("HTTPBIN_HOST", "nghttp2.org/httpbin")
@@ -37,7 +36,8 @@ OptionParser.new do |opts|
   end
 
   opts.on("-m MODE", "--mode=MODE", String, "select mode (#{$modes.join(", ")})") do |mode|
-    $modes = $modes.select { |m| m == mode }
+    modes = mode.split(/ *, */)
+    $modes = $modes.select { |m| modes.include?(m) }
   end
 
   opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
