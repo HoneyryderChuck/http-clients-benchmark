@@ -31,6 +31,8 @@ services:
       --no-ocsp --frontend 0.0.0.0,80;no-tls --frontend 0.0.0.0,443 --backend=httpbin,8000 /home/certs/nghttp2.key /home/certs/nghttp2.cert --accesslog-file=/dev/stdout --errorlog-file=/dev/stderr
 
   httpbin:
+    ports:
+      - 8000:8000
     image: citizenstig/httpbin
     command:
-      gunicorn --bind=0.0.0.0:8000 --workers=6 --access-logfile - --error-logfile - --log-level debug --capture-output httpbin:app
+      gunicorn --bind=0.0.0.0:8000 --threads=2 --keep-alive=2 --workers=6 --access-logfile - --error-logfile - --log-level debug --capture-output httpbin:app
