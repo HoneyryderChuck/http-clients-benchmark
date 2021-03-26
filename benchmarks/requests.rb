@@ -7,7 +7,7 @@ require_relative "../clients"
 
 host = ENV.fetch("HTTPBIN_HOST", "nghttp2.org/httpbin")
 $url = "https://#{host}/get"
-$modes = %w[single persistent concurrent]
+$modes = %w[single persistent concurrent pipelined]
 $clients = Clients.all
 $calls = 50
 
@@ -36,7 +36,7 @@ OptionParser.new do |opts|
     $calls = number
   end
 
-  opts.on("-m MODE", "--mode=MODE", String, "select mode (single, concurrent...)") do |mode|
+  opts.on("-m MODE", "--mode=MODE", String, "select mode (#{$modes.join(", ")})") do |mode|
     $modes = $modes.select { |m| m == mode }
   end
 
@@ -57,7 +57,8 @@ end.parse!
 COLOR_CODES_MODE = {
   "single" => 32,
   "concurrent" => 33,
-  "persistent" => 34
+  "persistent" => 34,
+  "pipelined" => 35
 }
 
 require 'benchmark'
