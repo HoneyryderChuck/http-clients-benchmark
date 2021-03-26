@@ -1,0 +1,39 @@
+stages:
+  - test
+  - deploy
+
+image: tmaier/docker-compose
+
+variables:
+  # this variable enables caching withing docker-in-docker
+  # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-workflow-with-docker-executor
+  MOUNT_POINT: /builds/$CI_PROJECT_PATH/vendor
+  # bundler-specific
+  BUNDLE_JOBS: 4
+  BUNDLE_PATH: vendor
+
+# Cache gems in between builds
+cache:
+  key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
+  paths:
+    - vendor
+
+benchmark:
+  services:
+    - docker:dind
+  script:
+    docker-compose -f docker-compose.yml -f docker-compose-gitlab.yml -p ci run benchmark
+  artifacts:
+    paths:
+      - "snapshots/"
+
+pages:
+  stage: deploy
+  script:
+    - mv snapshots public
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master

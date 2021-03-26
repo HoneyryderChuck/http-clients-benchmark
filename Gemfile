@@ -15,6 +15,7 @@ gem "gruff"
 
 # clients
 gem 'net-http-persistent'
+gem 'net-http-pipeline'
 gem 'typhoeus'
 gem 'excon'
 gem 'curb'

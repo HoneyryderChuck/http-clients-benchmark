@@ -1,0 +1,8 @@
+version: '3'
+services:
+  benchmark:
+    environment:
+      - "BUNDLE_PATH=${BUNDLE_PATH}"
+      - "BUNDLE_JOBS=${BUNDLE_JOBS}"
+    volumes:
+      - "${MOUNT_POINT}:/home/vendor"

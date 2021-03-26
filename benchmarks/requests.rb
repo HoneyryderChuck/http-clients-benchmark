@@ -2,13 +2,13 @@
 
 require 'optparse'
 
-
 require_relative "../clients"
 
-$url = "https://nghttp2.org/httpbin/get"
-$modes = %w[single persistent concurrent]
+host = ENV.fetch("HTTPBIN_HOST", "nghttp2.org/httpbin")
+$url = "https://#{host}/get"
+$modes = %w[single persistent concurrent pipelined]
 $clients = Clients.all
-$calls = 10
+$calls = 50
 
 options = {}
 
@@ -35,8 +35,9 @@ OptionParser.new do |opts|
     $calls = number
   end
 
-  opts.on("-m MODE", "--mode=MODE", String, "select mode (single, concurrent...)") do |mode|
-    $modes = $modes.select { |m| m == mode }
+  opts.on("-m MODE", "--mode=MODE", String, "select mode (#{$modes.join(", ")})") do |mode|
+    modes = mode.split(/ *, */)
+    $modes = $modes.select { |m| modes.include?(m) }
   end
 
   opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
@@ -56,7 +57,8 @@ end.parse!
 COLOR_CODES_MODE = {
   "single" => 32,
   "concurrent" => 33,
-  "persistent" => 34
+  "persistent" => 34,
+  "pipelined" => 35
 }
 
 require 'benchmark'
@@ -73,13 +75,12 @@ def run_benchmark
 end
 
 
-GRAPHS = $clients.map do |nm|
-  [nm, {}]
-end.to_h
+combinations = $modes.product($clients).select do |mode, nm|
+  Clients.fetch(nm).respond_to?(mode)
+end
 
-
-Benchmark.bm do |bm|
-  bench_clients = $clients.each do |nm|
+tms = Benchmark.bmbm do |bm|
+  combinations.each do |mode, nm|
     client = Clients.fetch(nm)
     begin
       client.boot
@@ -88,46 +89,47 @@ Benchmark.bm do |bm|
       next
     end
 
-    $modes.each do |mode|
-      next unless client.respond_to?(mode)
+    tty_color = COLOR_CODES_MODE[mode]
 
-      tty_color = COLOR_CODES_MODE[mode]
-
-      begin
-        run_benchmark do
-          tb = bm.report("#{nm}\t\t\e[#{tty_color}m#{mode}\e[0m") do
-            statuses = client.__send__(mode, $url, $calls, options)
-            if options[:verbose]
-              pr = Array(statuses).tally.map { |st, ct| "#{st} (#{ct})" }.join(", ")
-              print("\t#{pr}\n")
-            end
+    begin
+      run_benchmark do
+        bm.report("#{nm}\t\t\e[#{tty_color}m#{mode}\e[0m") do
+          statuses = client.__send__(mode, $url, $calls, options)
+          if options[:verbose]
+            pr = Array(statuses).tally.map { |st, ct| "#{st} (#{ct})" }.join(", ")
+            print("\t#{pr}\n")
           end
-          GRAPHS[nm][mode] = tb
         end
-      rescue RuntimeError => e
-        $stderr.puts "error running benchmark."
-        $stderr.puts e.full_message
       end
+    rescue RuntimeError => e
+      $stderr.puts "error running benchmark."
+      $stderr.puts e.full_message
     end
   end
 end
 
+tms.each_with_index do |tm, idx|
+  combinations[idx] << tm
+end
+
+by_mode = combinations.group_by(&:first)
 
 if options[:graph]
+  require "fileutils"
   require "gruff"
 
-  $modes.each do |mode|
+  FileUtils.mkdir_p("snapshots")
+
+  by_mode.each do |mode, combinations|
     g = Gruff::Bar.new(800)
     g.title = "HTTP Client Benchmarks - #{mode}"
     g.group_spacing = 20
     g.font = File.join(__dir__, "..", "fixtures", 'Roboto-Light.ttf')
 
-    GRAPHS.each do |nm, bench|
-      bm = bench[mode]
-      next unless bm
+    combinations.each do |_, nm, bm|
       g.data(nm, [bm.real])
     end
 
-    g.write("http-#{mode}-bench.png")
+    g.write("snapshots/http-#{mode}-bench.png")
   end
 end

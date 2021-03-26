@@ -10,7 +10,7 @@ module Clients
 
     def single(url, _, options)
       response = HTTP.get(url)
-
+      response.to_s
       response.status
     end
 
@@ -18,6 +18,8 @@ module Clients
       client = HTTP.persistent(url)
       calls.times.map {
         response = client.get(url)
+        # force the whole response to be read, otherwise you'll break the persistent loop
+        response.to_s
         response.status
       }
     end
