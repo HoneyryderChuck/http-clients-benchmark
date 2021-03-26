@@ -8,7 +8,7 @@ host = ENV.fetch("HTTPBIN_HOST", "nghttp2.org/httpbin")
 $url = "https://#{host}/get"
 $modes = %w[single persistent concurrent pipelined]
 $clients = Clients.all
-$calls = 50
+$calls = 200
 
 options = {}
 
@@ -59,6 +59,13 @@ COLOR_CODES_MODE = {
   "concurrent" => 33,
   "persistent" => 34,
   "pipelined" => 35
+}
+
+TITLE_MODE = {
+  "single" => "Single request",
+  "concurrent" => "%d Concurrent requests",
+  "persistent" => "%d Persistent requests",
+  "pipelined" => "%d Pipelined requests"
 }
 
 require 'benchmark'
@@ -122,7 +129,7 @@ if options[:graph]
 
   by_mode.each do |mode, combinations|
     g = Gruff::Bar.new(800)
-    g.title = "HTTP Client Benchmarks - #{mode}"
+    g.title = "HTTP Client Benchmarks - #{sprintf(TITLE_MODE[mode], $calls)}"
     g.group_spacing = 20
     g.font = File.join(__dir__, "..", "fixtures", 'Roboto-Light.ttf')
 
