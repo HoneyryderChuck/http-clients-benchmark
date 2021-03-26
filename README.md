@@ -33,19 +33,19 @@ The current http clients are being tested:
 
 ### Single
 
-![single benchmark chart](https://honeyryderchuck.gitlab.io/http-clients-benchmark/snapshots/http-single-bench.png)
+![single benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-single-bench.png?job=benchmark)
 
 ### Persistent
 
-![persistent benchmark chart](https://honeyryderchuck.gitlab.io/http-clients-benchmark/snapshots/http-persistent-bench.png)
+![persistent benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-persistent-bench.png?job=benchmark)
 
 ### Pipelined 
 
-![pipelined benchmark chart](https://honeyryderchuck.gitlab.io/http-clients-benchmark/snapshots/http-pipelined-bench.png)
+![pipelined benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-pipelined-bench.png?job=benchmark)
 
 ### Concurrent
 
-![concurrent benchmark chart](https://honeyryderchuck.gitlab.io/http-clients-benchmark/snapshots/http-concurrent-bench.png)
+![concurrent benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-concurrent-bench.png?job=benchmark)
 
 
 ## Would you like to test another HTTP client?
