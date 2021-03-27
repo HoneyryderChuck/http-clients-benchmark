@@ -13,7 +13,7 @@ The current benchmarks are collected and compared:
 
 (Clients may skip benchmarks if they do not supported the required functionality).
 
-The benchmarks run inside a docker-compose cluster and perform requests against an [httpbin](https://httpbin.org/) instance behind an [nghttpx](https://nghttp2.org/documentation/nghttpx-howto.html) proxy. This makes the benchmarks less affected by network instability or peer delays/rate-limiting, so we get a better feel of the real performance of each option.
+The benchmarks run inside a docker-compose cluster and perform requests against an [httpbin](https://httpbin.org/) instance behind an [nghttpx](https://nghttp2.org/documentation/nghttpx-howto.html) proxy. This makes the benchmarks less affected by network instability or peer delays/rate-limiting, so we get a better feel of how much overhead each option has.
 
 
 ## Ruby Clients
@@ -29,7 +29,6 @@ The current http clients are being tested:
 * typhoeus
 
 ## Benchmarks
-
 
 ### Single Request (HTTP/1.1)
 
@@ -81,14 +80,30 @@ You can alternatively run the benchmark script with different input:
 
 ## FAQ
 
-* Q.: How often are the benchmarks updated?
+### Why?
+
+As the maintainer of `httpx`, I'm interested in how well it measures against other popular `ruby` alternatives, specifically in:
+
+#### Performance
+
+In `ruby`, it's very common to hear that one should "drop down to C" in order to get more performance. `httpx` being pure `ruby`, I don't think, at least with modern `ruby`, that the implementation complexity is worth the cost; and `httpx` can perform as well or better as any other alternative. This benchmark keeps my assumptions honest.
+
+#### Feature completeness
+
+Not all clients support all features, so this chart can also be informative to anyone looking for feature coverage.
+
+#### API
+
+I also want to compare how "friendly" APIs are, when it comes to performing requests (disclaimer: `net-http` is as hard as it sounds).
+
+### Q.: How often are the benchmarks updated?
 
 Once a month. My CI minutes are limited.
 
-* Q.: Which benchmark is the most important?
+### Q.: Which benchmark is the most important?
 
 It depends of your workload. If you need to support concurrent requests, look at those. If you perform a request at a time not too often, probably you'd want to look at the single benchmark. However, you should take other parameters into consideration, such as API, maintainability, ease of integration, etc. .
 
-* Q.: What about memory usage, POST requests...?
+### Q.: What about memory usage, POST requests...?
 
 Still in the works. But feel free to make suggestions in the issues box.
