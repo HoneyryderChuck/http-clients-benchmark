@@ -15,12 +15,13 @@ module Clients
     end
 
     def persistent(url, calls, options)
-      concurrent(url, calls, options.merge(http_options: {http_version: :httpv1_1}))
+      concurrent(url, calls, options.merge(hydra_options: {max_concurrency: 1}, http_options: {http_version: :httpv1_1}))
     end
 
     def concurrent(url, calls, options)
       http_options = options.fetch(:http_options, {})
-      hydra = Typhoeus::Hydra.new(max_concurrency: 3)
+      hydra_options = options.fetch(:hydra_options, {})
+      hydra = Typhoeus::Hydra.new(hydra_options)
 
       requests = calls.times.map do
         request = Typhoeus::Request.new(url, ssl_verifyhost: 0, ssl_verifypeer: false, **http_options)

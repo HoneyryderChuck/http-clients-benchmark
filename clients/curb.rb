@@ -21,10 +21,17 @@ module Clients
     def persistent(url, calls, options)
       multi = Curl::Multi.new
       status = []
-      Curl::Multi.get([url] * calls, ssl_verify_peer: false, ssl_verify_host: 0) do |easy|
+
+      calls.times.each do
+        easy = Curl::Easy.new(url)
         easy.set(:HTTP_VERSION, Curl::HTTP_1_1)
-        status << easy.status
+        easy.ssl_verify_peer = false
+        easy.ssl_verify_host = 0
+        easy.on_success{|b| status << b.status }
+        multi.add(easy)
       end
+      multi.perform
+
       status
     end
 
