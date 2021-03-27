@@ -31,22 +31,44 @@ The current http clients are being tested:
 ## Benchmarks
 
 
-### Single
+### Single Request (HTTP/1.1)
+
+Measures the overhead of a single HTTP/1.1 GET request.
 
 ![single benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-single-bench.png?job=benchmark)
 
-### Persistent
+### Persistent (HTTP/1.1 Keep-Alive)
+
+Measures the overhead of 200 HTTP/1.1 GET requests, sent sequentially over the same TCP connection.
 
 ![persistent benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-persistent-bench.png?job=benchmark)
 
-### Pipelined 
+### Pipelined (HTTP/1.1)
+
+Measures the overhead of 200 HTTP/1.1 GET requests, sent simultaneously over the same TCP connection.
 
 ![pipelined benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-pipelined-bench.png?job=benchmark)
 
-### Concurrent
+### Concurrent (HTTP/2)
+
+Measures the overhead of 200 HTTP/2 GET requests, multiplexed over the same TCP connection.
 
 ![concurrent benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-concurrent-bench.png?job=benchmark)
 
+## How do you run the benchmark locally?
+
+Using `docker`, you should just clone the project, and run:
+
+```bash
+$ docker-compose run benchmark
+```
+
+You can alternatively run the benchmark script with different input:
+
+```bash
+# once you bundle install, and have everything in place:
+> bundle exec ruby benchmarks/requests.rb --help
+```
 
 ## Would you like to test another HTTP client?
 
