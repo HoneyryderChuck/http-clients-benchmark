@@ -140,7 +140,7 @@ if options[:graph]
 
     combinations.each do |_, nm, bm|
       client = Clients.fetch(nm)
-      g.data("#{nm} (#{version})", [bm.real])
+      g.data("#{nm} (#{client.version})", [bm.real])
     end
 
     g.write("snapshots/http-#{mode}-bench.png")
