@@ -10,6 +10,10 @@ module Clients
       Excon.defaults[:ssl_verify_peer] = false
     end
 
+    def version
+      Excon::VERSION
+    end
+
     def single(url, _, options)
       response = Excon.get(url)
 

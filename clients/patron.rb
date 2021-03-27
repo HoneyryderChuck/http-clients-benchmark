@@ -8,6 +8,10 @@ module Clients
       require "patron"
     end
 
+    def version
+      Patron::VERSION
+    end
+
     def single(url, _, options)
       uri = URI.parse(url)
       endpoint_without_path = begin

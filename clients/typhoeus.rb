@@ -8,6 +8,10 @@ module Clients
       require "typhoeus"
     end
 
+    def version
+      Typhoeus::VERSION
+    end
+
     def single(url, _, options)
       response = Typhoeus::Request.get(url, ssl_verifyhost: 0, ssl_verifypeer: false, http_version: :httpv1_1)
 

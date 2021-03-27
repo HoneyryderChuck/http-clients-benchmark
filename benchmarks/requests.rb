@@ -139,7 +139,8 @@ if options[:graph]
     g.font = File.join(__dir__, "..", "fixtures", 'Roboto-Light.ttf')
 
     combinations.each do |_, nm, bm|
-      g.data(nm, [bm.real])
+      client = Clients.fetch(nm)
+      g.data("#{nm} (#{version})", [bm.real])
     end
 
     g.write("snapshots/http-#{mode}-bench.png")

@@ -8,6 +8,10 @@ module Clients
       require "rest-client"
     end
 
+    def version
+      RestClient::VERSION
+    end
+
     def single(url, _, options)
       response = RestClient::Resource.new(url, verify_ssl: OpenSSL::SSL::VERIFY_NONE).get
 

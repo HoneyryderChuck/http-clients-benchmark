@@ -8,6 +8,10 @@ module Clients
       require "curb"
     end
 
+    def version
+      Curl::VERSION
+    end
+
     def single(url, _, options)
       curl = Curl::Easy.new(url)
       curl.set(:HTTP_VERSION, Curl::HTTP_1_1)

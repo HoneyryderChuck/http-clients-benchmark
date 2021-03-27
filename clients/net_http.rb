@@ -11,6 +11,10 @@ module Clients
       require 'net/http/pipeline'
     end
 
+    def version
+      Net::HTTP::VERSION
+    end
+
     def single(url, _, options)
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)

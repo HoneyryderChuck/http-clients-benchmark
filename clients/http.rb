@@ -8,6 +8,10 @@ module Clients
       require "http"
     end
 
+    def version
+      HTTP::VERSION
+    end
+
     def single(url, _, options)
       response = HTTP.get(url)
       response.to_s
