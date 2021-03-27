@@ -62,10 +62,10 @@ COLOR_CODES_MODE = {
 }
 
 TITLE_MODE = {
-  "single" => "Single request",
-  "concurrent" => "%d Concurrent requests",
-  "persistent" => "%d Persistent requests",
-  "pipelined" => "%d Pipelined requests"
+  "single" => "Single HTTP/1.1 GET request",
+  "concurrent" => "%d Concurrent HTTP/2 GET requests",
+  "persistent" => "%d Persistent HTTP/1.1 GET requests",
+  "pipelined" => "%d Pipelined HTTP/1.1 GET requests"
 }
 
 require 'benchmark'
@@ -124,12 +124,17 @@ by_mode = combinations.group_by(&:first)
 if options[:graph]
   require "fileutils"
   require "gruff"
+  require "time"
+
+  now = Time.now.utc
+
+  nowstr = now.strftime("%d/%m/%Y %H:%M")
 
   FileUtils.mkdir_p("snapshots")
 
   by_mode.each do |mode, combinations|
     g = Gruff::Bar.new(800)
-    g.title = "HTTP Client Benchmarks - #{sprintf(TITLE_MODE[mode], $calls)}"
+    g.title = "HTTP Client Benchmarks - #{sprintf(TITLE_MODE[mode], $calls)} (#{nowstr})"
     g.group_spacing = 20
     g.font = File.join(__dir__, "..", "fixtures", 'Roboto-Light.ttf')
 
