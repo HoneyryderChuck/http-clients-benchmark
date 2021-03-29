@@ -33,10 +33,11 @@ module Clients
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = uri.scheme == "https"
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      statuses = http.start do
+      statuses = []
+      http.start do
         requests = calls.times.map { Net::HTTP::Get.new(uri.path) }
         http.pipeline(requests) do |res|
-          res.code
+          statuses << res.code
         end
       end
       statuses
