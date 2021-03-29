@@ -26,8 +26,8 @@ module Clients
       response.status
     end
 
-    def concurrent(url, calls, options)
-      http_options = options.fetch(:http_options, {})
+    def persistent(url, calls, options)
+      http_options = options.fetch(:http_options, {http_version: "HTTPv1_1"})
       uri = URI.parse(url)
       endpoint_without_path = begin
         point = uri.dup
@@ -40,10 +40,6 @@ module Clients
         response = client.get(uri.path)
         response.status
       }
-    end
-
-    def persistent(url, calls, options)
-      concurrent(url, calls, options.merge(http_options: { http_version: "HTTPv1_1" }))
     end
   end
 
