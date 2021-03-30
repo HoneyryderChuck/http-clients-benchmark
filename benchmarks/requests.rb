@@ -135,6 +135,7 @@ if options[:graph]
   by_mode.each do |mode, combinations|
     g = Gruff::Bar.new(800)
     g.title = "HTTP Client Benchmarks - #{sprintf(TITLE_MODE[mode], $calls)} (#{nowstr})"
+    g.y_axis_label = 'Time (seconds)'
     g.group_spacing = 20
     g.font = File.join(__dir__, "..", "fixtures", 'Roboto-Light.ttf')
 
