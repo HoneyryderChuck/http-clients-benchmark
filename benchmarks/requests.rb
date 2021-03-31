@@ -136,6 +136,7 @@ if options[:graph]
     g = Gruff::Bar.new(800)
     g.title = "HTTP Client Benchmarks - #{sprintf(TITLE_MODE[mode], $calls)} (#{nowstr})"
     g.y_axis_label = 'Time (seconds)'
+    g.minimum_value = 0
     g.group_spacing = 20
     g.font = File.join(__dir__, "..", "fixtures", 'Roboto-Light.ttf')
 
