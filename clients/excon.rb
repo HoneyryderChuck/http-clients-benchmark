@@ -7,7 +7,6 @@ module Clients
 
     def boot
       require "excon"
-      Excon.defaults[:ssl_verify_peer] = false
     end
 
     def version
@@ -15,7 +14,7 @@ module Clients
     end
 
     def single(url, _, options)
-      response = Excon.get(url)
+      response = Excon.get(url, ssl_verify_peer: false)
 
       response.status
     end
@@ -24,7 +23,7 @@ module Clients
     # does "Connection: close", excon still tries to write to the socket,
     # and EPIPEs.
     def persistent(url, calls, options)
-      client = Excon.new(url, persistent: true)
+      client = Excon.new(url, ssl_verify_peer: false, persistent: true)
       calls.times.map {
         response = client.get
         response.status
@@ -36,7 +35,7 @@ module Clients
     # and EPIPEs.
     def pipelined(url, calls, options)
       url = URI(url)
-      client = Excon.new(url.to_s, persistent: true)
+      client = Excon.new(url.to_s, ssl_verify_peer: false, persistent: true)
       requests = calls.times.map { { method: :get, path: url.path} }
       client.requests(requests).map(&:status)
     end
