@@ -15,7 +15,6 @@ The current benchmarks are collected and compared:
 
 The benchmarks run inside a docker-compose cluster and perform requests against an [httpbin](https://httpbin.org/) instance behind an [nghttpx](https://nghttp2.org/documentation/nghttpx-howto.html) proxy. This makes the benchmarks less affected by network instability or peer delays/rate-limiting, so we get a better feel of how much overhead each option has.
 
-
 ## Ruby Clients
 
 The current http clients are being tested:
@@ -27,6 +26,8 @@ The current http clients are being tested:
 * curb
 * patron
 * typhoeus
+
+The most recent release for each will be used.
 
 ## Benchmarks
 

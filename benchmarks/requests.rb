@@ -134,7 +134,8 @@ if options[:graph]
 
   by_mode.each do |mode, combinations|
     g = Gruff::Bar.new(800)
-    g.title = "HTTP Client Benchmarks - #{sprintf(TITLE_MODE[mode], $calls)} (#{nowstr})"
+    g.title = "HTTP Client Benchmarks - #{sprintf(TITLE_MODE[mode], $calls)} (#{nowstr})\n"
+    g.x_axis_label = "(#{RUBY_DESCRIPTION})"
     g.y_axis_label = 'Time (seconds)'
     g.minimum_value = 0
     g.group_spacing = 20
