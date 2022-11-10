@@ -35,25 +35,25 @@ The most recent release for each will be used.
 
 Measures the overhead of a single HTTP/1.1 GET request.
 
-![single benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-single-bench.png?job=benchmark)
+![single benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-single-bench.png?job=benchmark)
 
 ### Persistent (HTTP/1.1 Keep-Alive)
 
 Measures the overhead of 200 HTTP/1.1 GET requests, sent sequentially over the same TCP connection.
 
-![persistent benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-persistent-bench.png?job=benchmark)
+![persistent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-persistent-bench.png?job=benchmark)
 
 ### Pipelined (HTTP/1.1)
 
 Measures the overhead of 200 HTTP/1.1 GET requests, sent simultaneously over the same TCP connection.
 
-![pipelined benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-pipelined-bench.png?job=benchmark)
+![pipelined benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-pipelined-bench.png?job=benchmark)
 
 ### Concurrent (HTTP/2)
 
 Measures the overhead of 200 HTTP/2 GET requests, multiplexed over the same TCP connection.
 
-![concurrent benchmark chart](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-concurrent-bench.png?job=benchmark)
+![concurrent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-concurrent-bench.png?job=benchmark)
 
 ## How do you run the benchmark locally?
 
@@ -74,8 +74,8 @@ You can alternatively run the benchmark script with different input:
 
 
 * Fork this repository;
-* Add a [new module for the http client](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/tree/master/clients);
-* Add a function for each supported module (i.e.: `.single`, `pipelined`, follow [this example](https://gitlab.com/honeyryderchuck/http-clients-benchmark/-/blob/master/clients/httpx.rb));
+* Add a [new module for the http client](https://gitlab.com/os85/http-clients-benchmark/-/tree/master/clients);
+* Add a function for each supported module (i.e.: `.single`, `pipelined`, follow [this example](https://gitlab.com/os85/http-clients-benchmark/-/blob/master/clients/httpx.rb));
 * Make sure it works (run `ruby benchmarks/clients --help`);
 * Submit an MR with your changes;
 
