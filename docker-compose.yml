@@ -17,10 +17,10 @@ services:
       /home/bench.sh
 
   nghttp2:
-    image: registry.gitlab.com/honeyryderchuck/httpx/nghttp2:2
     ports:
       - 80:80
       - 443:443
+    image: registry.gitlab.com/os85/httpx/nghttp2:1
     depends_on:
       - httpbin
     volumes:
