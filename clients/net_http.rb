@@ -15,6 +15,14 @@ module Clients
       Net::HTTP::VERSION
     end
 
+    def name_persistent
+      "net-http-persistent"
+    end
+
+    def name_pipelined
+      "net-http-pipeline"
+    end
+
     def single(url, _, options)
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
