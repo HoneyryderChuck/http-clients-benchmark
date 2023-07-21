@@ -141,9 +141,15 @@ if options[:graph]
     g.group_spacing = 20
     g.font = File.join(__dir__, "..", "fixtures", 'Roboto-Light.ttf')
 
-    combinations.each do |_, nm, bm|
+    combinations.each do |mode, nm, bm|
       client = Clients.fetch(nm)
-      g.data("#{nm} (#{client.version})", [bm.real])
+
+      label = if client.respond_to?(:"name_#{mode}")
+        client.__send__(:"name_#{mode}")
+      else
+        nm
+      end
+      g.data("#{label} (#{client.version})", [bm.real])
     end
 
     g.write("snapshots/http-#{mode}-bench.png")

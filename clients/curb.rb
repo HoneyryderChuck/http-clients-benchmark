@@ -39,13 +39,25 @@ module Clients
       status
     end
 
+    def pipelined(url, calls, options)
+      multi = Curl::Multi.new
+      multi.pipeline = Curl::CURLPIPE_HTTP1
+      do_multiple(multi, url, calls, options)
+    end
+
     def concurrent(url, calls, options)
       multi = Curl::Multi.new
-      status = []
+      multi.pipeline = Curl::CURLPIPE_MULTIPLEX
+      do_multiple(multi, url, calls, options)
+    end
+
+
+    def do_multiple(multi, url, calls, options)
+      statuses = []
       Curl::Multi.get([url] * calls, ssl_verify_peer: false, ssl_verify_host: 0) do |easy|
-        status << easy.status
+        statuses << easy.status
       end
-      status
+      statuses
     end
   end
 
