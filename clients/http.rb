@@ -19,13 +19,14 @@ module Clients
     end
 
     def persistent(url, calls, options)
-      client = HTTP.persistent(url)
-      calls.times.map {
-        response = client.get(url)
-        # force the whole response to be read, otherwise you'll break the persistent loop
-        response.to_s
-        response.status
-      }
+      HTTP.persistent(url) do |client|
+        calls.times.map {
+          response = client.get(url)
+          # force the whole response to be read, otherwise you'll break the persistent loop
+          response.to_s
+          response.status
+        }
+      end
     end
   end
 
