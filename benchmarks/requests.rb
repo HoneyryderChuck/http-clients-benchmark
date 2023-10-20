@@ -142,6 +142,8 @@ if options[:graph]
     g.font = File.join(__dir__, "..", "fixtures", 'Roboto-Light.ttf')
 
     combinations.each do |mode, nm, bm|
+      next unless bm # failed to require client
+
       client = Clients.fetch(nm)
 
       label = if client.respond_to?(:"name_#{mode}")
