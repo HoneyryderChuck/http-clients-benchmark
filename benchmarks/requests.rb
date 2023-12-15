@@ -81,6 +81,17 @@ def run_benchmark
   GC.start
 end
 
+$clients.select! do |nm|
+  client = Clients.fetch(nm)
+  begin
+    client.boot
+    true
+  rescue LoadError
+    $stderr.puts "Could not load #{nm}, skipping benchmarks"
+    false
+  end
+end
+
 
 combinations = $modes.product($clients).select do |mode, nm|
   Clients.fetch(nm).respond_to?(mode)
@@ -89,12 +100,6 @@ end
 tms = Benchmark.bmbm do |bm|
   combinations.each do |mode, nm|
     client = Clients.fetch(nm)
-    begin
-      client.boot
-    rescue LoadError
-      $stderr.puts "Could not load #{nm}, skipping benchmarks"
-      next
-    end
 
     tty_color = COLOR_CODES_MODE[mode]
 

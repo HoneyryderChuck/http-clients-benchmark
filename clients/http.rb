@@ -30,5 +30,6 @@ module Clients
     end
   end
 
-  register "http", HTTPClient
+  # httprb hangs in jruby benchmarks
+  register "http", HTTPClient unless RUBY_PLATFORM == "java"
 end

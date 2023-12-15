@@ -6,3 +6,10 @@ services:
       - "BUNDLE_JOBS=${BUNDLE_JOBS}"
     volumes:
       - "${MOUNT_POINT}:/home/vendor"
+
+  benchmark-jruby:
+    environment:
+      - "BUNDLE_PATH=${BUNDLE_PATH}"
+      - "BUNDLE_JOBS=${BUNDLE_JOBS}"
+    volumes:
+      - "${MOUNT_POINT}:/home/vendor"

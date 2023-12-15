@@ -13,7 +13,23 @@ services:
       - nghttp2
     volumes:
       - ./:/home
-    entrypoint:
+    command:
+      /home/bench.sh
+
+  benchmark-jruby:
+    environment:
+      - HTTPBIN_HOST=nghttp2
+      - GEM_HOME=/usr/local/bundle
+      - BUNDLE_PATH=/usr/local/bundle
+      - BUNDLE_SILENCE_ROOT_WARNING=1
+      - BUNDLE_APP_CONFIG=/usr/local/bundle
+      - BUNDLE_JOBS=20
+    image: jruby:9.4
+    depends_on:
+      - nghttp2
+    volumes:
+      - ./:/home
+    command:
       /home/bench.sh
 
   nghttp2:
