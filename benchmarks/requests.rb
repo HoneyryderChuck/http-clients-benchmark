@@ -8,7 +8,7 @@ host = ENV.fetch("HTTPBIN_HOST", "nghttp2.org/httpbin")
 $url = "https://#{host}/get"
 $modes = %w[single persistent concurrent pipelined]
 $clients = Clients.all
-$calls = 200
+$calls = 5000
 
 options = {}
 

@@ -37,7 +37,7 @@ module Clients
       url = URI(url)
       client = Excon.new(url.to_s, ssl_verify_peer: false, persistent: true)
       requests = calls.times.map { { method: :get, path: url.path} }
-      client.requests(requests).map(&:status)
+      client.batch_requests(requests, 1000).map(&:status)
     end
   end
 

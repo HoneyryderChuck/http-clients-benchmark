@@ -43,9 +43,10 @@ module Clients
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       statuses = []
       http.start do
-        requests = calls.times.map { Net::HTTP::Get.new(uri.path) }
-        http.pipeline(requests) do |res|
-          statuses << res.code
+        calls.times.map { Net::HTTP::Get.new(uri.path) }.each_slice(1000) do |requests|
+          http.pipeline(requests) do |res|
+            statuses << res.code
+          end
         end
       end
       statuses
