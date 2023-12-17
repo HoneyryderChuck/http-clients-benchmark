@@ -159,6 +159,6 @@ if options[:graph]
       g.data("#{label} (#{client.version})", [bm.real])
     end
 
-    g.write("snapshots/http-#{mode}-bench.png")
+    g.write("snapshots/#{RUBY_ENGINE}-http-#{mode}-bench.png")
   end
 end
