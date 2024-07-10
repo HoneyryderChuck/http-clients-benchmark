@@ -35,25 +35,49 @@ The most recent release for each will be used.
 
 Measures the overhead of a single HTTP/1.1 GET request.
 
-![single benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-single-bench.png?job=benchmark)
+#### CRuby
+
+![single benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/ruby-http-single-bench.png?job=benchmark)
+
+#### JRuby
+
+![single benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/java-http-single-bench.png?job=benchmark)
 
 ### Persistent (HTTP/1.1 Keep-Alive)
 
 Measures the overhead of 200 HTTP/1.1 GET requests, sent sequentially over the same TCP connection.
 
-![persistent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-persistent-bench.png?job=benchmark)
+#### CRuby
+
+![persistent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/ruby-http-persistent-bench.png?job=benchmark)
+
+#### JRuby
+
+![persistent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/java-http-persistent-bench.png?job=benchmark)
 
 ### Pipelined (HTTP/1.1)
 
 Measures the overhead of 200 HTTP/1.1 GET requests, sent simultaneously over the same TCP connection.
 
-![pipelined benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-pipelined-bench.png?job=benchmark)
+#### CRuby
+
+![pipelined benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/ruby-http-pipelined-bench.png?job=benchmark)
+
+#### JRuby
+
+![pipelined benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/java-http-pipelined-bench.png?job=benchmark)
 
 ### Concurrent (HTTP/2)
 
 Measures the overhead of 200 HTTP/2 GET requests, multiplexed over the same TCP connection.
 
-![concurrent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/http-concurrent-bench.png?job=benchmark)
+#### CRuby
+
+![concurrent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/ruby-http-concurrent-bench.png?job=benchmark)
+
+#### JRuby
+
+![concurrent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/java-http-concurrent-bench.png?job=benchmark)
 
 ## How do you run the benchmark locally?
 

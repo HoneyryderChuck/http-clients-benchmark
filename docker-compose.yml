@@ -13,7 +13,23 @@ services:
       - nghttp2
     volumes:
       - ./:/home
-    entrypoint:
+    command:
+      /home/bench.sh
+
+  benchmark-jruby:
+    environment:
+      - HTTPBIN_HOST=nghttp2
+      - GEM_HOME=/usr/local/bundle
+      - BUNDLE_PATH=/usr/local/bundle
+      - BUNDLE_SILENCE_ROOT_WARNING=1
+      - BUNDLE_APP_CONFIG=/usr/local/bundle
+      - BUNDLE_JOBS=20
+    image: jruby:9.4
+    depends_on:
+      - nghttp2
+    volumes:
+      - ./:/home
+    command:
       /home/bench.sh
 
   nghttp2:
@@ -31,8 +47,8 @@ services:
       --no-ocsp --frontend 0.0.0.0,80;no-tls --frontend 0.0.0.0,443 --backend=httpbin,8000 /home/certs/nghttp2.key /home/certs/nghttp2.cert --accesslog-file=/dev/stdout --errorlog-file=/dev/stderr
 
   httpbin:
-    ports:
-      - 8000:8000
-    image: citizenstig/httpbin
-    command:
-      gunicorn --bind=0.0.0.0:8000 --threads=2 --keep-alive=2 --workers=6 --access-logfile - --error-logfile - --log-level debug --capture-output httpbin:app
+    image: mccutchen/go-httpbin
+    environment:
+      - PORT=8000
+    volumes:
+      - ./:/home

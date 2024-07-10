@@ -26,15 +26,15 @@ module Clients
       requests = [url] * calls
       # httpx tries to pipeline, so we have to limit it to 1 concurrent request on initialization.
       # force usage of http/1.1, for apples-to-apples comparison.
-      responses = HTTPX.get(*requests, ssl: { alpn_protocols: %w[http/1.1]}, **http_options)
-      
+      responses = HTTPX.with(ssl: { alpn_protocols: %w[http/1.1] }).get(*requests)
+
       responses.map(&:status)
     end
 
     def concurrent(url, calls, options)
       requests = [url] * calls
       responses = HTTPX.get(*requests)
-     
+
       responses.map(&:status)
     end
   end

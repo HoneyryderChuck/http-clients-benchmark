@@ -27,6 +27,16 @@ benchmark:
     paths:
       - "snapshots/"
 
+
+benchmark jruby:
+  services:
+    - docker:dind
+  script:
+    docker-compose -f docker-compose.yml -f docker-compose-gitlab.yml -p ci run benchmark-jruby
+  artifacts:
+    paths:
+      - "snapshots/"
+
 pages:
   stage: deploy
   script:

@@ -8,7 +8,7 @@ host = ENV.fetch("HTTPBIN_HOST", "nghttp2.org/httpbin")
 $url = "https://#{host}/get"
 $modes = %w[single persistent concurrent pipelined]
 $clients = Clients.all
-$calls = 200
+$calls = 5000
 
 options = {}
 
@@ -81,6 +81,17 @@ def run_benchmark
   GC.start
 end
 
+$clients.select! do |nm|
+  client = Clients.fetch(nm)
+  begin
+    client.boot
+    true
+  rescue LoadError
+    $stderr.puts "Could not load #{nm}, skipping benchmarks"
+    false
+  end
+end
+
 
 combinations = $modes.product($clients).select do |mode, nm|
   Clients.fetch(nm).respond_to?(mode)
@@ -89,12 +100,6 @@ end
 tms = Benchmark.bmbm do |bm|
   combinations.each do |mode, nm|
     client = Clients.fetch(nm)
-    begin
-      client.boot
-    rescue LoadError
-      $stderr.puts "Could not load #{nm}, skipping benchmarks"
-      next
-    end
 
     tty_color = COLOR_CODES_MODE[mode]
 
@@ -142,6 +147,8 @@ if options[:graph]
     g.font = File.join(__dir__, "..", "fixtures", 'Roboto-Light.ttf')
 
     combinations.each do |mode, nm, bm|
+      next unless bm # failed to require client
+
       client = Clients.fetch(nm)
 
       label = if client.respond_to?(:"name_#{mode}")
@@ -152,6 +159,6 @@ if options[:graph]
       g.data("#{label} (#{client.version})", [bm.real])
     end
 
-    g.write("snapshots/http-#{mode}-bench.png")
+    g.write("snapshots/#{RUBY_ENGINE}-http-#{mode}-bench.png")
   end
 end
