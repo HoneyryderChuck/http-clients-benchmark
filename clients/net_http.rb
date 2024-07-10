@@ -37,6 +37,7 @@ module Clients
     end
 
     def pipelined(url, calls, options)
+      raise "net-http-pipeline takes too much time when pipelining over 3000 requests" unless calls < 3000
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = uri.scheme == "https"

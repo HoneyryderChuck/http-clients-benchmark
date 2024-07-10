@@ -111,6 +111,8 @@ tms = Benchmark.bmbm do |bm|
             pr = Array(statuses).tally.map { |st, ct| "#{st} (#{ct})" }.join(", ")
             print("\t#{pr}\n")
           end
+        rescue => error
+          $stderr.puts error.message
         end
       end
     rescue RuntimeError => e
