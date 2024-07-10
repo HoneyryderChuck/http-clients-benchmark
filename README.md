@@ -41,7 +41,7 @@ Measures the overhead of a single HTTP/1.1 GET request.
 
 #### JRuby
 
-![single benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/jruby-http-single-bench.png?job=benchmark)
+![single benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/jruby-http-single-bench.png?job=benchmark-ruby)
 
 ### Persistent (HTTP/1.1 Keep-Alive)
 
@@ -53,7 +53,7 @@ Measures the overhead of 200 HTTP/1.1 GET requests, sent sequentially over the s
 
 #### JRuby
 
-![persistent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/jruby-http-persistent-bench.png?job=benchmark)
+![persistent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/jruby-http-persistent-bench.png?job=benchmark-ruby)
 
 ### Pipelined (HTTP/1.1)
 
@@ -65,7 +65,7 @@ Measures the overhead of 200 HTTP/1.1 GET requests, sent simultaneously over the
 
 #### JRuby
 
-![pipelined benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/jruby-http-pipelined-bench.png?job=benchmark)
+![pipelined benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/jruby-http-pipelined-bench.png?job=benchmark-ruby)
 
 ### Concurrent (HTTP/2)
 
@@ -77,7 +77,7 @@ Measures the overhead of 200 HTTP/2 GET requests, multiplexed over the same TCP 
 
 #### JRuby
 
-![concurrent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/jruby-http-concurrent-bench.png?job=benchmark)
+![concurrent benchmark chart](https://gitlab.com/os85/http-clients-benchmark/-/jobs/artifacts/master/raw/snapshots/jruby-http-concurrent-bench.png?job=benchmark-ruby)
 
 ## How do you run the benchmark locally?
 
