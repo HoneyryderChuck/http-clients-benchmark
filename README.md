@@ -57,7 +57,7 @@ Measures the overhead of 200 HTTP/1.1 GET requests, sent sequentially over the s
 
 ### Pipelined (HTTP/1.1)
 
-Measures the overhead of 200 HTTP/1.1 GET requests, sent simultaneously over the same TCP connection.
+Measures the overhead of 5000 HTTP/1.1 GET requests, sent simultaneously over the same TCP connection.
 
 #### CRuby
 
@@ -69,7 +69,7 @@ Measures the overhead of 200 HTTP/1.1 GET requests, sent simultaneously over the
 
 ### Concurrent (HTTP/2)
 
-Measures the overhead of 200 HTTP/2 GET requests, multiplexed over the same TCP connection.
+Measures the overhead of 5000 HTTP/2 GET requests, multiplexed over the same TCP connection.
 
 #### CRuby
 
