@@ -25,7 +25,6 @@ end
 
 # clients
 gem 'net-http-persistent'
-gem 'net-http-pipeline'
 gem 'excon'
 gem 'http'
 gem 'httpx'

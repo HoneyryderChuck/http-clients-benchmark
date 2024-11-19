@@ -36,22 +36,6 @@ module Clients
       response.code
     end
 
-    def pipelined(url, calls, options)
-      uri = URI.parse(url)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = uri.scheme == "https"
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      statuses = []
-      http.start do
-        calls.times.map { Net::HTTP::Get.new(uri.path) }.each_slice(1000) do |requests|
-          http.pipeline(requests) do |res|
-            statuses << res.code
-          end
-        end
-      end
-      statuses
-    end
-
     def persistent(url, calls, options)
       uri = URI.parse(url)
       http = Net::HTTP::Persistent.new
