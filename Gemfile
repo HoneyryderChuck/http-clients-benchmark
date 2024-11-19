@@ -12,7 +12,6 @@ platform :mri do
 
   gem 'curb'
   gem 'typhoeus'
-  gem 'patron'
 end
 
 gem "pry", :require => false
