@@ -53,10 +53,18 @@ module Clients
 
 
     def do_multiple(multi, url, calls, options)
+      multi.max_host_connections = 1 if multi.respond_to?(:max_host_connections=) # https://github.com/taf2/curb/pull/460
       statuses = []
-      Curl::Multi.get([url] * calls, ssl_verify_peer: false, ssl_verify_host: 0) do |easy|
-        statuses << easy.status
+      ([url] * calls).each do |url|
+        easy = Curl::Easy.new(url)
+        easy.set(:PIPEWAIT, Curl::CURLOPT_PIPEWAIT)
+        easy.verbose = true if options[:debug]
+        easy.ssl_verify_peer = false
+        easy.ssl_verify_host = 0
+        easy.on_success { |b| statuses << b.status }
+        multi.add(easy)
       end
+      multi.perform
       statuses
     end
   end
