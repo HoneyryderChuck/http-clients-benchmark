@@ -8,7 +8,6 @@ module Clients
       require 'net/http'
       require 'net/https'
       require 'net/http/persistent'
-      require 'net/http/pipeline'
     end
 
     def version
