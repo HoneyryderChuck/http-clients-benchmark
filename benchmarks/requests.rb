@@ -44,6 +44,10 @@ OptionParser.new do |opts|
     options[:verbose] = v
   end
 
+  opts.on("--[no-]debug", "Run with debug output (for the clients supporting it)") do |v|
+    options[:debug] = v
+  end
+
   opts.on("-g", "--graph", "build graphs") do |g|
     options[:graph] = g
   end

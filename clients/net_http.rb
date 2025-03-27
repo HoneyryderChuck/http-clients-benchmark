@@ -23,6 +23,7 @@ module Clients
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = uri.scheme == "https"
+      http.set_debug_output(STDOUT) if options[:debug]
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
       request = Net::HTTP::Get.new(uri.request_uri)
@@ -36,6 +37,7 @@ module Clients
       uri = URI.parse(url)
       http = Net::HTTP::Persistent.new
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.set_debug_output(STDOUT) if options[:debug]
       statuses = calls.times.map {
         response = http.request(uri)
         response.code

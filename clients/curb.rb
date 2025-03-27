@@ -13,10 +13,8 @@ module Clients
     end
 
     def single(url, _, options)
-      curl = Curl::Easy.new(url)
+      curl = easy_handle(url, options)
       curl.set(:HTTP_VERSION, Curl::HTTP_1_1)
-      curl.ssl_verify_peer = false
-      curl.ssl_verify_host = 0
       curl.http_get
 
       curl.status
@@ -27,10 +25,8 @@ module Clients
       status = []
 
       calls.times.each do
-        easy = Curl::Easy.new(url)
+        easy = easy_handle(url, options)
         easy.set(:HTTP_VERSION, Curl::HTTP_1_1)
-        easy.ssl_verify_peer = false
-        easy.ssl_verify_host = 0
         easy.on_success{|b| status << b.status }
         multi.add(easy)
       end
@@ -56,16 +52,21 @@ module Clients
       multi.max_host_connections = 1 if multi.respond_to?(:max_host_connections=) # https://github.com/taf2/curb/pull/460
       statuses = []
       ([url] * calls).each do |url|
-        easy = Curl::Easy.new(url)
+        easy = easy_handle(url, options)
         easy.set(:PIPEWAIT, Curl::CURLOPT_PIPEWAIT)
-        easy.verbose = true if options[:debug]
-        easy.ssl_verify_peer = false
-        easy.ssl_verify_host = 0
         easy.on_success { |b| statuses << b.status }
         multi.add(easy)
       end
       multi.perform
       statuses
+    end
+
+    def easy_handle(url, options)
+      curl = Curl::Easy.new(url)
+      curl.verbose = true if options[:debug]
+      curl.ssl_verify_peer = false
+      curl.ssl_verify_host = 0
+      curl
     end
   end
 

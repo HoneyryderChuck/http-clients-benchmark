@@ -13,7 +13,8 @@ module Clients
     end
 
     def single(url, _, options)
-      response = Typhoeus::Request.get(url, ssl_verifyhost: 0, ssl_verifypeer: false, http_version: :httpv1_1)
+      http_options = http_options(options)
+      response = Typhoeus::Request.get(url, http_version: :httpv1_1, **http_options)
 
       response.code
     end
@@ -23,18 +24,28 @@ module Clients
     end
 
     def concurrent(url, calls, options)
-      http_options = options.fetch(:http_options, {})
-      hydra_options = options.fetch(:hydra_options, {})
+      hydra_options = options.delete(:hydra_options) || {}
+      http_options = http_options(options)
       hydra = Typhoeus::Hydra.new(hydra_options)
 
       requests = calls.times.map do
-        request = Typhoeus::Request.new(url, ssl_verifyhost: 0, ssl_verifypeer: false, **http_options)
+        request = Typhoeus::Request.new(url, **http_options)
         hydra.queue(request)
         request
       end
       hydra.run
 
       requests.map(&:response).map(&:code)
+    end
+
+    def http_options(options)
+      http_options = options.fetch(:http_options, {})
+      http_options[:ssl_verifyhost] = 0
+      http_options[:ssl_verifypeer] = false
+      if options[:debug]
+        http_options[:verbose] = true
+      end
+      http_options
     end
   end
 
