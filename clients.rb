@@ -2,9 +2,6 @@
 
 require "openssl"
 
-# As many times we're testing against a local server with an handmade cert, let's skip verification
-OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
-
 module Clients
   @clients = {}
 
@@ -19,10 +16,9 @@ module Clients
   end
 
   def register(sym, client)
-    @clients[sym] = client 
+    @clients[sym] = client
   end
 end
 
 
 Dir[File.join(".", "clients", "*.rb")].sort.each { |f| require f }
-

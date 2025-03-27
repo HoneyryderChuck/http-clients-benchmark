@@ -14,4 +14,15 @@ fi
 cd /home
 bundle install
 
+CABUNDLEDIR=/home/certs
+if [[ "$RUBY_PLATFORM" = "java" ]]; then
+
+  keytool -import -alias nghttp2 -file $CABUNDLEDIR/nghttp2.cert \
+    -keystore $JAVA_HOME/lib/security/cacerts \
+    -storepass changeit -noprompt
+else
+  export SSL_CERT_FILE=$CABUNDLEDIR/nghttp2.cert
+fi
+
+
 bundle exec ruby benchmarks/requests.rb --url=https://nghttp2/get --graph

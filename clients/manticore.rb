@@ -15,7 +15,7 @@ module Clients
 
     def single(url, _, options)
       http_options(options)
-      response = Manticore::Client.new(ssl: { verify: false }).get(url)
+      response = Manticore::Client.new.get(url)
 
       response.code
     end
@@ -25,7 +25,7 @@ module Clients
     # and EPIPEs.
     def persistent(url, calls, options)
       http_options(options)
-      client = Manticore::Client.new(ssl: { verify: false })
+      client = Manticore::Client.new
       calls.times.map {
         response = client.get(url)
         response.code

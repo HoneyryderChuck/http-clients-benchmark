@@ -51,9 +51,8 @@ module Clients
 
     def easy_handle(url, options)
       curl = Curl::Easy.new(url)
+      curl.cacert = "certs/nghttp2.cert"
       curl.verbose = true if options[:debug]
-      curl.ssl_verify_peer = false
-      curl.ssl_verify_host = 0
       curl
     end
   end

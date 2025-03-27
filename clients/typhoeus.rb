@@ -42,8 +42,7 @@ module Clients
 
     def http_options(options)
       http_options = options.fetch(:http_options, {})
-      http_options[:ssl_verifyhost] = 0
-      http_options[:ssl_verifypeer] = false
+      http_options[:cainfo] = "certs/nghttp2.cert"
       http_options[:pipewait] = 237 # CURLOPT_PIPEWAIT
       if options[:debug]
         http_options[:verbose] = true

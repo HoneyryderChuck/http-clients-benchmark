@@ -42,7 +42,6 @@ module Clients
 
     def http_options(options)
       http_options = options.fetch(:http_options, {})
-      http_options[:ssl_verify_peer] = false
       http_options[:debug] = options[:debug]
       http_options
     end
