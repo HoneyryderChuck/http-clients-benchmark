@@ -22,28 +22,15 @@ module Clients
 
     def persistent(url, calls, options)
       multi = Curl::Multi.new
-      status = []
-
-      calls.times.each do
-        easy = easy_handle(url, options)
+      multi.pipeline = Curl::CURLPIPE_NOTHING
+      do_multiple(multi, url, calls, options) do |easy|
         easy.set(:HTTP_VERSION, Curl::HTTP_1_1)
-        easy.on_success{|b| status << b.status }
-        multi.add(easy)
       end
-      multi.perform
-
-      status
-    end
-
-    def pipelined(url, calls, options)
-      multi = Curl::Multi.new
-      multi.pipeline = Curl::CURLPIPE_HTTP1
-      do_multiple(multi, url, calls, options)
     end
 
     def concurrent(url, calls, options)
       multi = Curl::Multi.new
-      multi.pipeline = Curl::CURLPIPE_MULTIPLEX
+      multi.pipeline = Curl::PIPE_MULTIPLEX
       do_multiple(multi, url, calls, options)
     end
 
@@ -55,6 +42,7 @@ module Clients
         easy = easy_handle(url, options)
         easy.set(:PIPEWAIT, Curl::CURLOPT_PIPEWAIT)
         easy.on_success { |b| statuses << b.status }
+        yield easy if block_given?
         multi.add(easy)
       end
       multi.perform

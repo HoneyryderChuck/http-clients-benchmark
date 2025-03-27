@@ -20,10 +20,6 @@ module Clients
     end
 
     def persistent(url, calls, options)
-      concurrent(url, calls, options.merge(hydra_options: {max_concurrency: 1}, http_options: {http_version: :httpv1_1}))
-    end
-
-    def pipelined(url, calls, options)
       concurrent(url, calls, options.merge( http_options: {http_version: :httpv1_1}))
     end
 
