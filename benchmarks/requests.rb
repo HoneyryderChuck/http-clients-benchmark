@@ -5,12 +5,15 @@ require 'optparse'
 require_relative "../clients"
 
 host = ENV.fetch("HTTPBIN_HOST", "nghttp2.org/httpbin")
-$url = "https://#{host}/get"
+$url = ENV.fetch("URL", "https://#{host}/get")
 $modes = %w[single persistent concurrent pipelined]
 $clients = Clients.all
-$calls = 5000
+$calls = ENV.fetch("NUMBER", 5000)
 
-options = {}
+options = {
+  debug: ENV.key?("DEBUG"),
+  verbose: ENV.key?("VERBOSE")
+}
 
 OptionParser.new do |opts|
   client_examples = $clients.take(2).join(",") << ".."
