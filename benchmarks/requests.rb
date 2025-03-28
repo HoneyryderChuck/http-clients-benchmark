@@ -79,6 +79,9 @@ require 'benchmark'
 
 
 def run_benchmark
+  if defined?(RubyVM::YJIT)
+    RubyVM::YJIT.enable
+  end
   GC.start
   GC.disable
 
