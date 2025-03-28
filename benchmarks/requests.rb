@@ -123,6 +123,7 @@ tms = Benchmark.bmbm do |bm|
           end
         rescue => error
           $stderr.puts error.message
+          $stderr.puts error.backtrace.join("\n") if options[:debug]
         end
       end
     rescue RuntimeError => e
