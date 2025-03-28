@@ -23,19 +23,31 @@ module Clients
     def persistent(url, calls, options)
       multi = Curl::Multi.new
       multi.pipeline = Curl::CURLPIPE_NOTHING
-      do_multiple(multi, url, calls, options) do |easy|
-        easy.set(:HTTP_VERSION, Curl::HTTP_1_1)
+
+      statuses = []
+      urls = ([url] * calls)
+
+      # prepare first request
+      url = urls.shift
+      easy = easy_handle(url, options)
+      easy.set(:HTTP_VERSION, Curl::HTTP_1_1)
+      # prepare consumption loop
+      easy.on_success do |b|
+        statuses << b.status
+        if (url = urls.shift)
+          easy.url = url
+          multi.add(easy)
+        end
       end
+      multi.add(easy)
+
+      multi.perform until urls.empty?
+      statuses
     end
 
     def concurrent(url, calls, options)
       multi = Curl::Multi.new
-      multi.pipeline = Curl::PIPE_MULTIPLEX
-      do_multiple(multi, url, calls, options)
-    end
-
-
-    def do_multiple(multi, url, calls, options)
+      multi.pipeline = Curl::CURLPIPE_MULTIPLEX
       multi.max_host_connections = 1 if multi.respond_to?(:max_host_connections=) # https://github.com/taf2/curb/pull/460
       statuses = []
       ([url] * calls).each do |url|
