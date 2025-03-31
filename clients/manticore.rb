@@ -14,7 +14,8 @@ module Clients
     end
 
     def single(url, _, options)
-      response = Manticore::Client.new(ssl: { verify: false }).get(url)
+      http_options(options)
+      response = Manticore::Client.new.get(url)
 
       response.code
     end
@@ -23,11 +24,18 @@ module Clients
     # does "Connection: close", excon still tries to write to the socket,
     # and EPIPEs.
     def persistent(url, calls, options)
-      client = Manticore::Client.new(ssl: { verify: false })
+      http_options(options)
+      client = Manticore::Client.new
       calls.times.map {
         response = client.get(url)
         response.code
       }
+    end
+
+    def http_options(options)
+      if options[:debug]
+        Manticore.disable_httpcomponents_logging!
+      end
     end
   end
 

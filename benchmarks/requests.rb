@@ -5,12 +5,15 @@ require 'optparse'
 require_relative "../clients"
 
 host = ENV.fetch("HTTPBIN_HOST", "nghttp2.org/httpbin")
-$url = "https://#{host}/get"
+$url = ENV.fetch("URL", "https://#{host}/get")
 $modes = %w[single persistent concurrent pipelined]
 $clients = Clients.all
-$calls = 5000
+$calls = ENV.fetch("NUMBER", 5000)
 
-options = {}
+options = {
+  debug: ENV.key?("DEBUG"),
+  verbose: ENV.key?("VERBOSE")
+}
 
 OptionParser.new do |opts|
   client_examples = $clients.take(2).join(",") << ".."
@@ -44,6 +47,10 @@ OptionParser.new do |opts|
     options[:verbose] = v
   end
 
+  opts.on("--[no-]debug", "Run with debug output (for the clients supporting it)") do |v|
+    options[:debug] = v
+  end
+
   opts.on("-g", "--graph", "build graphs") do |g|
     options[:graph] = g
   end
@@ -72,6 +79,9 @@ require 'benchmark'
 
 
 def run_benchmark
+  if defined?(RubyVM::YJIT)
+    RubyVM::YJIT.enable
+  end
   GC.start
   GC.disable
 
@@ -113,6 +123,7 @@ tms = Benchmark.bmbm do |bm|
           end
         rescue => error
           $stderr.puts error.message
+          $stderr.puts error.backtrace.join("\n") if options[:debug]
         end
       end
     rescue RuntimeError => e

@@ -13,29 +13,35 @@ module Clients
     end
 
     def single(url, _, options)
-      response = HTTPX.get(url, ssl: { alpn_protocols: %w[http/1.1]})
+      response = HTTPX.get(url, ssl: { alpn_protocols: %w[http/1.1]}, **http_options(options))
       response.status
     end
 
     def persistent(url, calls, options)
+      # httpx tries to pipeline, so we have to limit it to 1 concurrent request on initialization.
       pipelined(url, calls, options.merge(http_options: {max_concurrent_requests: 1}))
     end
 
     def pipelined(url, calls, options)
-      http_options = options.fetch(:http_options, {})
       requests = [url] * calls
-      # httpx tries to pipeline, so we have to limit it to 1 concurrent request on initialization.
       # force usage of http/1.1, for apples-to-apples comparison.
-      responses = HTTPX.with(ssl: { alpn_protocols: %w[http/1.1] }).get(*requests)
-
+      responses = HTTPX.get(*requests, ssl: { alpn_protocols: %w[http/1.1] }, **http_options(options))
       responses.map(&:status)
     end
 
     def concurrent(url, calls, options)
       requests = [url] * calls
-      responses = HTTPX.get(*requests)
-
+      responses = HTTPX.get(*requests, **http_options(options))
       responses.map(&:status)
+    end
+
+    def http_options(options)
+      http_options = options.fetch(:http_options, {})
+      if options[:debug]
+        http_options[:debug_level] = 2
+        http_options[:debug] = $stderr
+      end
+      http_options
     end
   end
 

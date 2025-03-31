@@ -13,28 +13,41 @@ module Clients
     end
 
     def single(url, _, options)
-      response = Typhoeus::Request.get(url, ssl_verifyhost: 0, ssl_verifypeer: false, http_version: :httpv1_1)
+      http_options = http_options(options)
+      response = Typhoeus::Request.get(url, http_version: :httpv1_1, **http_options)
 
       response.code
     end
 
     def persistent(url, calls, options)
-      concurrent(url, calls, options.merge(hydra_options: {max_concurrency: 1}, http_options: {http_version: :httpv1_1}))
+      concurrent(url, calls, options.merge( http_options: {http_version: :httpv1_1}))
     end
 
     def concurrent(url, calls, options)
-      http_options = options.fetch(:http_options, {})
-      hydra_options = options.fetch(:hydra_options, {})
+      hydra_options = options.delete(:hydra_options) || {}
+      http_options = http_options(options)
       hydra = Typhoeus::Hydra.new(hydra_options)
+      # hack to set this, as there's no way to set this defined option via public API
+      Ethon::Curl.set_option(:max_host_connections, 1, hydra.multi.handle, :multi)
 
       requests = calls.times.map do
-        request = Typhoeus::Request.new(url, ssl_verifyhost: 0, ssl_verifypeer: false, **http_options)
+        request = Typhoeus::Request.new(url, **http_options)
         hydra.queue(request)
         request
       end
       hydra.run
 
       requests.map(&:response).map(&:code)
+    end
+
+    def http_options(options)
+      http_options = options.fetch(:http_options, {})
+      http_options[:cainfo] = "certs/nghttp2.cert"
+      http_options[:pipewait] = 237 # CURLOPT_PIPEWAIT
+      if options[:debug]
+        http_options[:verbose] = true
+      end
+      http_options
     end
   end
 

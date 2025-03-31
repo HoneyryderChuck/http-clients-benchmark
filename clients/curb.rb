@@ -13,10 +13,8 @@ module Clients
     end
 
     def single(url, _, options)
-      curl = Curl::Easy.new(url)
+      curl = easy_handle(url, options)
       curl.set(:HTTP_VERSION, Curl::HTTP_1_1)
-      curl.ssl_verify_peer = false
-      curl.ssl_verify_host = 0
       curl.http_get
 
       curl.status
@@ -24,40 +22,50 @@ module Clients
 
     def persistent(url, calls, options)
       multi = Curl::Multi.new
-      status = []
+      multi.pipeline = Curl::CURLPIPE_NOTHING
 
-      calls.times.each do
-        easy = Curl::Easy.new(url)
-        easy.set(:HTTP_VERSION, Curl::HTTP_1_1)
-        easy.ssl_verify_peer = false
-        easy.ssl_verify_host = 0
-        easy.on_success{|b| status << b.status }
-        multi.add(easy)
+      statuses = []
+      urls = ([url] * calls)
+
+      # prepare first request
+      url = urls.shift
+      easy = easy_handle(url, options)
+      easy.set(:HTTP_VERSION, Curl::HTTP_1_1)
+      # prepare consumption loop
+      easy.on_success do |b|
+        statuses << b.status
+        if (url = urls.shift)
+          easy.url = url
+          multi.add(easy)
+        end
       end
-      multi.perform
+      multi.add(easy)
 
-      status
-    end
-
-    def pipelined(url, calls, options)
-      multi = Curl::Multi.new
-      multi.pipeline = Curl::CURLPIPE_HTTP1
-      do_multiple(multi, url, calls, options)
+      multi.perform until urls.empty?
+      statuses
     end
 
     def concurrent(url, calls, options)
       multi = Curl::Multi.new
       multi.pipeline = Curl::CURLPIPE_MULTIPLEX
-      do_multiple(multi, url, calls, options)
+      multi.max_host_connections = 1 if multi.respond_to?(:max_host_connections=) # https://github.com/taf2/curb/pull/460
+      statuses = []
+      ([url] * calls).each do |url|
+        easy = easy_handle(url, options)
+        easy.set(:PIPEWAIT, Curl::CURLOPT_PIPEWAIT)
+        easy.on_success { |b| statuses << b.status }
+        yield easy if block_given?
+        multi.add(easy)
+      end
+      multi.perform
+      statuses
     end
 
-
-    def do_multiple(multi, url, calls, options)
-      statuses = []
-      Curl::Multi.get([url] * calls, ssl_verify_peer: false, ssl_verify_host: 0) do |easy|
-        statuses << easy.status
-      end
-      statuses
+    def easy_handle(url, options)
+      curl = Curl::Easy.new(url)
+      curl.cacert = "certs/nghttp2.cert"
+      curl.verbose = true if options[:debug]
+      curl
     end
   end
 

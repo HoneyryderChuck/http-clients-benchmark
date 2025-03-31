@@ -13,13 +13,13 @@ module Clients
     end
 
     def single(url, _, options)
-      response = HTTP.get(url)
+      response = client(options).get(url)
       response.to_s
       response.status
     end
 
     def persistent(url, calls, options)
-      HTTP.persistent(url) do |client|
+      client(options).persistent(url) do |client|
         calls.times.map {
           response = client.get(url)
           # force the whole response to be read, otherwise you'll break the persistent loop
@@ -27,6 +27,16 @@ module Clients
           response.status
         }
       end
+    end
+
+    def client(options)
+      http = HTTP
+      if options[:debug]
+        require "logger"
+        logger = Logger.new(STDOUT)
+        http = http.use(logging: {logger: logger})
+      end
+      http
     end
   end
 

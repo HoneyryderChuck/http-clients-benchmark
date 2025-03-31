@@ -23,9 +23,9 @@ The current http clients are being tested:
 * net-http
 * excon
 * http
-* curb
-* patron
-* typhoeus
+* curb (CRuby only)
+* typhoeus (CRuby only)
+* manticore (JRuby only)
 
 The most recent release for each will be used.
 
