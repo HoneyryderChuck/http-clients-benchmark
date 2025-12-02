@@ -2,7 +2,7 @@ stages:
   - test
   - deploy
 
-image: tmaier/docker-compose
+image: docker/compose:latest
 
 variables:
   # this variable enables caching withing docker-in-docker
