@@ -1,4 +1,3 @@
-version: '3'
 services:
   benchmark:
     environment:
@@ -13,8 +12,7 @@ services:
       - nghttp2
     volumes:
       - ./:/home
-    command:
-      /home/bench.sh
+    command: /home/bench.sh
 
   benchmark-jruby:
     environment:
@@ -29,8 +27,7 @@ services:
       - nghttp2
     volumes:
       - ./:/home
-    command:
-      /home/bench.sh
+    command: /home/bench.sh
 
   nghttp2:
     ports:
@@ -41,10 +38,8 @@ services:
       - httpbin
     volumes:
       - ./:/home
-    entrypoint:
-      /usr/local/bin/nghttpx
-    command:
-      --no-ocsp --frontend 0.0.0.0,80;no-tls --frontend 0.0.0.0,443 --backend=httpbin,8000 /home/certs/nghttp2.key /home/certs/nghttp2.cert --accesslog-file=/dev/stdout --errorlog-file=/dev/stderr
+    entrypoint: /usr/local/bin/nghttpx
+    command: --no-ocsp --frontend 0.0.0.0,80;no-tls --frontend 0.0.0.0,443 --backend=httpbin,8000 /home/certs/nghttp2.key /home/certs/nghttp2.cert --accesslog-file=/dev/stdout --errorlog-file=/dev/stderr
 
   httpbin:
     image: mccutchen/go-httpbin
