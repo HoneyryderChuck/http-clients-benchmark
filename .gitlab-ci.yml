@@ -2,7 +2,7 @@ stages:
   - test
   - deploy
 
-image: docker/compose:latest
+image: docker:latest
 
 variables:
   # this variable enables caching withing docker-in-docker
@@ -22,7 +22,7 @@ benchmark:
   services:
     - docker:dind
   script:
-    docker-compose -f docker-compose.yml -f docker-compose-gitlab.yml -p ci run benchmark
+    docker compose -f docker-compose.yml -f docker-compose-gitlab.yml -p ci run benchmark
   artifacts:
     paths:
       - "snapshots/"
@@ -32,7 +32,7 @@ benchmark jruby:
   services:
     - docker:dind
   script:
-    docker-compose -f docker-compose.yml -f docker-compose-gitlab.yml -p ci run benchmark-jruby
+    docker compose -f docker-compose.yml -f docker-compose-gitlab.yml -p ci run benchmark-jruby
   artifacts:
     paths:
       - "snapshots/"

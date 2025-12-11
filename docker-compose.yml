@@ -39,7 +39,7 @@ services:
     volumes:
       - ./:/home
     entrypoint: /usr/local/bin/nghttpx
-    command: --no-ocsp --frontend 0.0.0.0,80;no-tls --frontend 0.0.0.0,443 --backend=httpbin,8000 /home/certs/nghttp2.key /home/certs/nghttp2.cert --accesslog-file=/dev/stdout --errorlog-file=/dev/stderr
+    command: --no-ocsp --frontend="0.0.0.0,80;no-tls" --frontend="0.0.0.0,443" --backend=httpbin,8000 /home/certs/nghttp2.key /home/certs/nghttp2.cert --accesslog-file=/dev/stdout --errorlog-file=/dev/stderr
 
   httpbin:
     image: mccutchen/go-httpbin
