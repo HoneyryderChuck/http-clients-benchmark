@@ -16,13 +16,7 @@ end
 
 gem "pry", :require => false
 
-if RUBY_ENGINE == "jruby"
-  # transitive dep rmagick4j
-  gem "gruff", github: "topfunky/gruff", branch: "master"
-else
-  # transitive dep rmagick
-  gem "gruff"
-end
+gem "gruff"
 
 platform :jruby do
   gem 'manticore'
