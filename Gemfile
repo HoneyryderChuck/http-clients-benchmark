@@ -5,6 +5,9 @@ ruby RUBY_VERSION
 source "https://rubygems.org"
 
 platform :mri do
+  gem "irb", require: false
+  gem "debug", require: false
+  gem "benchmark", require: false
   gem "benchmark-ips", require: false
   gem "pry-byebug", require: false
   gem "ruby-prof"
