@@ -16,9 +16,7 @@ bundle install
 
 CABUNDLEDIR=/home/certs
 if [[ "$RUBY_PLATFORM" = "java" ]]; then
-
-  keytool -import -alias nghttp2 -file $CABUNDLEDIR/nghttp2.cert \
-    -keystore $JAVA_HOME/lib/security/cacerts \
+  keytool -import -cacerts -alias nghttp2 -file $CABUNDLEDIR/nghttp2.cert \
     -storepass changeit -noprompt
 else
   export SSL_CERT_FILE=$CABUNDLEDIR/nghttp2.cert
