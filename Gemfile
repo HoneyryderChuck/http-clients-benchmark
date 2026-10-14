@@ -4,11 +4,15 @@ ruby RUBY_VERSION
 
 source "https://rubygems.org"
 
+
+gem "base64", require: false
+gem "benchmark", require: false
+gem "benchmark-ips", require: false
+gem "irb", require: false
+gem "observer", require: false
+
 platform :mri do
-  gem "irb", require: false
   gem "debug", require: false
-  gem "benchmark", require: false
-  gem "benchmark-ips", require: false
   gem "pry-byebug", require: false
   gem "ruby-prof"
   gem "stackprof"
